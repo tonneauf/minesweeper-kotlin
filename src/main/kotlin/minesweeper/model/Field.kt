@@ -22,20 +22,22 @@ class Field(private val sizeX: Int = 9, private val sizeY: Int = 9, private val 
             return false
         }
 
-        var isTheGameEnd = true
+        var allMinesMarked = true
+        var allNonMineCellAreFree = true
 
         exploreBoard { x, y ->
             val cell = board[x][y]
 
             // Mine not marked or empty cell not free, makes the game still playing
-            if (cell.type == CellType.MINE && cell.state != CellState.MARKED ||
-                cell.type != CellType.MINE && cell.state != CellState.FREE
-            ) {
-                isTheGameEnd = false
+            if (cell.type == CellType.MINE && cell.state != CellState.MARKED) {
+                allMinesMarked = false
+            }
+            if (cell.type != CellType.MINE && cell.state != CellState.FREE) {
+                allNonMineCellAreFree = false
             }
         }
 
-        return isTheGameEnd
+        return allMinesMarked || allNonMineCellAreFree
     }
 
     fun mark(x: Int, y: Int) {
